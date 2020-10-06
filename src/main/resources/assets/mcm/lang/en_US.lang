@@ -1,0 +1,9 @@
+// Items
+item.construct_sword.name=Sword
+// Rings
+item.willpower_ring.name=§aWillpower Ring
+// Abilities
+ability.mcm.construct.name=Construct
+ability.mcm.willpower.name=§aWillpower
+// Weaknesses
+// Spells
