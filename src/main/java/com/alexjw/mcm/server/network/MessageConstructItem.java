@@ -51,7 +51,8 @@ public class MessageConstructItem implements IMessageHandler<MessageConstructIte
                 ItemStack itemStackConstruct = new ItemStack(item);
 
                 if (itemConstructWeapon.getCost() < (itemStackRing.getMaxDamage() - itemStackRing.getItemDamage())) {
-                    LanternHelper.consumePower(itemStackRing, player, itemConstructWeapon.getCost());
+                    if(!player.capabilities.isCreativeMode)
+                        LanternHelper.consumePower(itemStackRing, player, itemConstructWeapon.getCost());
                     player.inventory.addItemStackToInventory(itemStackConstruct);
                 }
             }

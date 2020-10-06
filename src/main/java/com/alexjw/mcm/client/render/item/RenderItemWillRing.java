@@ -2,6 +2,7 @@ package com.alexjw.mcm.client.render.item;
 
 import com.alexjw.mcm.client.model.ModelWillRing;
 import com.alexjw.mcm.server.items.ItemWillpowerRing;
+import com.alexjw.mcm.server.items.ModItems;
 import com.fiskmods.heroes.common.hero.HeroIteration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -36,7 +37,6 @@ public class RenderItemWillRing implements IItemRenderer {
     public void renderItem(ItemRenderType type, ItemStack itemstack, Object... data) {
         HeroIteration iter = ItemWillpowerRing.getContainedHero(itemstack);
         GL11.glPushMatrix();
-        model.symbol.showModel = iter == null;
         float scale;
         if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
             GL11.glTranslatef(0.7F, 0.4F, 0.2F);
@@ -71,6 +71,30 @@ public class RenderItemWillRing implements IItemRenderer {
             scale = 1.0F;
             GL11.glScalef(scale, -scale, -scale);
             render();
+        }
+        if (iter == null) {
+            GL11.glRotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glTranslatef(0.0F, 0.0F, -0.0625F);
+            ItemStack item = new ItemStack(ModItems.willpowerLogo);
+
+            if (type == ItemRenderType.INVENTORY) {
+                scale = 0.01171875F;
+                GL11.glScalef(-scale, -scale, scale);
+                RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, -8, -8);
+            } else {
+                IIcon icon = item.getIconIndex();
+                ResourceLocation location = mc.getTextureManager().getResourceLocation(item.getItemSpriteNumber());
+                mc.getTextureManager().bindTexture(location);
+                if (icon == null) {
+                    icon = ((TextureMap) mc.getTextureManager().getTexture(location)).getAtlasSprite("missingno");
+                }
+
+                scale = 0.1875F;
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glScalef(scale, scale, scale);
+                GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
+                ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
+            }
         }
 
         if (iter != null) {

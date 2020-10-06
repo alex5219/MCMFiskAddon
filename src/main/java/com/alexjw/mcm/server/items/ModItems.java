@@ -45,6 +45,7 @@ public class ModItems {
     public static ItemConstructWeapon WRENCH = new ItemConstructWeapon("wrench", 0, 20, 0f, 4.75f);
 
     public static Item willpowerRing;
+    public static Item willpowerLogo;
 
     public static void register() {
         Field[] var0 = ModItems.class.getFields();
@@ -58,7 +59,7 @@ public class ModItems {
                 }
             }
         }
-
+        willpowerLogo = registerItem("willpower_logo", new Item());
         willpowerRing = registerItem("willpower_ring", new ItemWillpowerRing());
     }
 

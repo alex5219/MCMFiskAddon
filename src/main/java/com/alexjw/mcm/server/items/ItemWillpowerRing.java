@@ -202,4 +202,9 @@ public class ItemWillpowerRing extends ItemUntextured implements IItemListEntry 
     public void onCreated(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         itemStack.damageItem(1, entityPlayer);
     }
+
+    public boolean showDurabilityBar(ItemStack stack)
+    {
+        return true;
+    }
 }

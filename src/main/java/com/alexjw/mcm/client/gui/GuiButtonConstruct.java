@@ -1,6 +1,7 @@
 package com.alexjw.mcm.client.gui;
 
 import com.alexjw.mcm.server.helper.LanternHelper;
+import com.fiskmods.heroes.client.SHRenderHooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -10,34 +11,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.opengl.GL11;
 
 public class GuiButtonConstruct extends GuiButton {
-    protected static RenderItem itemRender = new RenderItem();
-    public Minecraft mc = Minecraft.getMinecraft();
     public ItemStack itemStack;
-    protected FontRenderer fontRendererObj = mc.fontRenderer;
+    private boolean isActive = true;
+    protected static RenderItem renderItem = RenderItem.getInstance();
 
     public GuiButtonConstruct(int buttonId, ItemStack itemStack, int x, int y) {
         super(buttonId, x, y, 18, 18, itemStack.getDisplayName());
         this.itemStack = itemStack;
-        if (itemStack.stackTagCompound == null) {
-            itemStack.stackTagCompound = new NBTTagCompound();
-        }
-        itemStack.stackTagCompound.setString("lantern", LanternHelper.getPlayerLantern(Minecraft.getMinecraft().thePlayer).toString());
-    }
-
-    /**
-     * Render an ItemStack. Args : stack, x, y, format
-     */
-    private void drawItemStack(ItemStack stack, int x, int y) {
-        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
-        this.zLevel = 200.0F;
-        itemRender.zLevel = 200.0F;
-        FontRenderer font = null;
-        if (stack != null) font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = fontRendererObj;
-        itemRender.renderItemAndEffectIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
-        itemRender.renderItemOverlayIntoGUI(font, this.mc.getTextureManager(), stack, x, y);
-        this.zLevel = 0.0F;
-        itemRender.zLevel = 0.0F;
     }
 
     /**
@@ -45,8 +25,27 @@ public class GuiButtonConstruct extends GuiButton {
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            this.drawItemStack(this.itemStack, this.xPosition, this.yPosition);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            if(isActive) {
+                if (itemStack != null) {
+                    if (itemStack.stackTagCompound == null) {
+                        itemStack.stackTagCompound = new NBTTagCompound();
+                    }
+                    itemStack.stackTagCompound.setString("lantern", LanternHelper.getPlayerLantern(Minecraft.getMinecraft().thePlayer).toString());
+                    FontRenderer font = itemStack.getItem().getFontRenderer(itemStack);
+                    if (font == null) {
+                        font = mc.fontRenderer;
+                    }
+                    renderItem.renderItemIntoGUI(font, mc.getTextureManager(), itemStack, this.xPosition, this.yPosition);
+                }
+            }
         }
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }
