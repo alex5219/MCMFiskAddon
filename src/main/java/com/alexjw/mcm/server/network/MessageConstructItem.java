@@ -2,7 +2,7 @@ package com.alexjw.mcm.server.network;
 
 import com.alexjw.mcm.server.helper.LanternHelper;
 import com.alexjw.mcm.server.items.ItemWillpowerRing;
-import com.alexjw.mcm.server.items.constructs.ItemConstructWeapon;
+import com.alexjw.mcm.server.items.constructs.ItemConstruct;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -38,7 +38,7 @@ public class MessageConstructItem implements IMessageHandler<MessageConstructIte
         if (ctx.side.isServer()) {
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             Item item = GameRegistry.findItem(message.itemStackID, message.itemStackName);
-            ItemConstructWeapon itemConstructWeapon = (ItemConstructWeapon) item;
+            ItemConstruct itemConstruct = (ItemConstruct) item;
             ItemStack itemStackRing = null;
 
             for (ItemStack itemStack1 : player.inventory.mainInventory) {
@@ -50,9 +50,9 @@ public class MessageConstructItem implements IMessageHandler<MessageConstructIte
             if (itemStackRing != null) {
                 ItemStack itemStackConstruct = new ItemStack(item);
 
-                if (itemConstructWeapon.getCost() < (itemStackRing.getMaxDamage() - itemStackRing.getItemDamage())) {
+                if (itemConstruct.getCost() < (itemStackRing.getMaxDamage() - itemStackRing.getItemDamage())) {
                     if(!player.capabilities.isCreativeMode)
-                        LanternHelper.consumePower(itemStackRing, player, itemConstructWeapon.getCost());
+                        LanternHelper.consumePower(itemStackRing, player, itemConstruct.getCost());
                     player.inventory.addItemStackToInventory(itemStackConstruct);
                 }
             }
